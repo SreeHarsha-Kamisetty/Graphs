@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Charts</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css">
+
+
+</head>
+
+<body>
+    <div class="breadcrumb">
+        <button class="menu-toggle" onclick="toggleSidebar()">☰ Menu</button>
+    </div>
+    <div class="sidebar">
+        <h2>Menu</h2>
+        <button onclick="fetchData('daily')">Overall Data</button>
+        <button onclick="CompareData('daily')">Compare Data</button>
+    </div>
+
+    <div class="content">
+        <h1>Invoice Data Charts</h1>
+        <div class="select-container">
+            <label for="outlet_id" id="outlet_label">Outlet:</label>
+            <select id="outlet_id">
+                <option value="">...</option>
+                <option value="OBLRALA01">Avalhalli</option>
+                <option value="OBLRSPL01">Singapura</option>
+                <option value="OBLRCKL01">Chikalsandra</option>
+            </select>
+            <button id="apply" onclick="applyData()">Apply</button>
+        </div>
+        <div class="select-container2">
+            <label for="compare_type">Type:</label>
+            <select id="compare_type">
+                <option value="">...</option>
+                <option value="daily">Daily</option>
+                <!-- <option value="weekly">Weekly</option> -->
+                <option value="monthly">Monthly</option>
+            </select>
+        </div>
+        <div class=" chart-container">
+            <canvas id="chart"></canvas>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
