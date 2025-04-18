@@ -4,7 +4,8 @@ const selectContainer = document.getElementById("outlet_id");
 const selectContainer2 = document.getElementById("compare_type");
 const outletLabel = document.getElementById("outlet_label");
 let tab = "fetch";
-const backendUrl = "http://localhost:8080";
+// const backendUrl = "http://localhost:8080";
+const backendUrl = "https://graphs-4t3c.onrender.com";
 // function toggleSelectVisibility(show, element) {
 //   //   const selectContainer = document.querySelector(".select-container");
 //   if (show) {
