@@ -2,6 +2,10 @@ const express = require("express");
 const InvoiceRouter = express.Router();
 const { InvoiceModel } = require("../models/invoice.model");
 const { InvoiceLineModel } = require("../models/invoice_line.model");
+const fs = require("fs");
+const path = require("path");
+const csvParser = require("csv-parser");
+const { v5: uuidV5 } = require("uuid");
 
 InvoiceRouter.post("/", async (req, res) => {
   try {
@@ -431,6 +435,63 @@ InvoiceRouter.get("/compare", async (req, res) => {
   }
 });
 
+InvoiceRouter.post("/upload", async (req, res) => {
+  try {
+    const tmpDir = path.join(__dirname, "../tmp"); // Path to the tmp directory
+    const invoiceFile = path.join(tmpDir, "ebono_invoice.csv"); // Invoice CSV file
+    const invoiceLineFile = path.join(tmpDir, "ebono_invoice_lines.csv"); // Invoice Line CSV file
+
+    // Read and save data from ebono_invoice.csv
+    const invoices = [];
+    fs.createReadStream(invoiceFile)
+      .pipe(csvParser())
+      .on("data", (row) => {
+        const { invoice_id, customer, ...rest } = row;
+        const { is_proxy_number, customer_id } = customer;
+        const namespace = uuidV5.URL;
+
+        // Custom string (name) to generate the UUID
+
+        // Generate the UUIDv5
+        const generatedUuid = uuidV5(invoice_id, namespace);
+        const modifiedData = {
+          invoice_id: generatedUuid,
+        };
+        invoices.push(row); // Push each row into the invoices array
+      })
+      .on("end", async () => {
+        try {
+          // Save all invoices to the database
+          await InvoiceModel.insertMany(invoices);
+          console.log("Invoices saved successfully.");
+        } catch (error) {
+          console.error("Error saving invoices:", error);
+        }
+      });
+
+    // Read and save data from ebono_invoice_lines.csv
+    const invoiceLines = [];
+    fs.createReadStream(invoiceLineFile)
+      .pipe(csvParser())
+      .on("data", (row) => {
+        invoiceLines.push(row); // Push each row into the invoiceLines array
+      })
+      .on("end", async () => {
+        try {
+          // Save all invoice lines to the database
+          await InvoiceLineModel.insertMany(invoiceLines);
+          console.log("Invoice lines saved successfully.");
+        } catch (error) {
+          console.error("Error saving invoice lines:", error);
+        }
+      });
+
+    res.status(200).json({ message: "Files are being processed and saved." });
+  } catch (error) {
+    console.error("Error processing files:", error);
+    res.status(500).json({ error: "Error processing files." });
+  }
+});
 module.exports = {
   InvoiceRouter,
 };

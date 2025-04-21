@@ -5,10 +5,6 @@ const InvoiceLineSchema = mongoose.Schema({
     type: Buffer, // Binary data
     required: true,
   },
-  order_line_id: {
-    type: Buffer, // Binary data
-    required: true,
-  },
   sku_code: {
     type: String,
     required: true,
@@ -37,14 +33,6 @@ const InvoiceLineSchema = mongoose.Schema({
       required: true,
     },
   },
-  tax_code: {
-    type: String,
-    required: true,
-  },
-  taxes: {
-    type: Array,
-    default: [],
-  },
   created_at: {
     type: Date,
     required: true,
@@ -55,32 +43,6 @@ const InvoiceLineSchema = mongoose.Schema({
   },
   sku_title: {
     type: String,
-    required: true,
-  },
-  has_packs: {
-    type: Boolean,
-    required: true,
-  },
-  mrp: {
-    currency: {
-      type: String,
-      required: true,
-    },
-    fraction: {
-      type: Number,
-      required: true,
-    },
-    cent_amount: {
-      type: Number,
-      required: true,
-    },
-  },
-  invoice_line_unit_allocation: {
-    type: Array,
-    default: [],
-  },
-  is_weighed_item: {
-    type: Boolean,
     required: true,
   },
 });
